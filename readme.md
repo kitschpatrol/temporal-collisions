@@ -1,5 +1,7 @@
 # Temporal Collissions
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/91ce5ae9-2c2b-4ddd-9672-f08504d64d7c/deploy-status)](https://app.netlify.com/sites/temporal-collisions/deploys)
+
 ## Overview
 
 This is a service which finds recent Flickr photos which were taken at the exact same second.
@@ -26,7 +28,7 @@ console.log(collisions);
 Request
 
 ```
-http://localhost:8888/api/find
+/api/find
 ```
 
 Response:
@@ -53,5 +55,5 @@ npm run test:watch
 ### Local Netlify Function testing
 
 ```
-netlify dev
+npm run build:watch-netlify
 ```

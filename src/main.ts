@@ -1,5 +1,6 @@
 import "dotenv/config";
 import Flickr from "flickr-sdk";
+import { performance } from "perf_hooks";
 //import util from "util";
 
 // Kind of a hard-coded duplication from the "extras" object in the Flickr photo search query
