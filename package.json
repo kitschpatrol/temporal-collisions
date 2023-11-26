@@ -8,14 +8,15 @@
     "pnpm": ">=8.0.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/jest": "~27.4",
     "@types/lodash": "^4.14.179",
     "@types/node": "~16.11",
     "@typescript-eslint/eslint-plugin": "~5.14",
     "@typescript-eslint/parser": "~5.14",
-    "eslint": "~8.11",
     "eslint-config-prettier": "~8.5",
     "eslint-plugin-jest": "~26.1",
+    "eslint": "~8.11",
     "jest": "~27.5",
     "netlify-cli": "^9.13.5",
     "prettier": "~2.5",
@@ -39,7 +40,6 @@
   "author": "Eric Mika",
   "license": "Unlicensed",
   "dependencies": {
-    "@jest/globals": "^29.7.0",
     "@netlify/functions": "^1.0.0",
     "dotenv": "^16.0.0",
     "flickr-sdk": "^6.0.0",
