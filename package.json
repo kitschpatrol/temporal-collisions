@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "TK",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
   "devDependencies": {
     "@types/jest": "~27.4",
     "@types/lodash": "^4.14.179",
@@ -35,6 +39,7 @@
   "author": "Eric Mika",
   "license": "Unlicensed",
   "dependencies": {
+    "@jest/globals": "^29.7.0",
     "@netlify/functions": "^1.0.0",
     "dotenv": "^16.0.0",
     "flickr-sdk": "^6.0.0",
