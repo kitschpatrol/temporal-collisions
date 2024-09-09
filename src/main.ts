@@ -1,191 +1,244 @@
-import "dotenv/config";
-import Flickr from "flickr-sdk";
-import { performance } from "perf_hooks";
-//import util from "util";
+import 'dotenv/config'
+import Flickr from 'flickr-sdk'
+import { performance } from 'node:perf_hooks'
+// Import util from "util";
 
 // Kind of a hard-coded duplication from the "extras" object in the Flickr photo search query
-const suffixes = ["t", "m", "z", "c", "l", "o"];
+const suffixes = ['t', 'm', 'z', 'c', 'l', 'o']
 
-function minSizeImageUrl(photo: object, minWidth: number, minHeight: number) {
-  // Get the url that is at least as wide as the min width...
-  let currentWidth = Number.MAX_SAFE_INTEGER;
-  let currentHeight = Number.MAX_SAFE_INTEGER;
-  let url = "";
+function minSizeImageUrl(photo: Record<string, unknown>, minWidth: number, minHeight: number) {
+	// Get the url that is at least as wide as the min width...
+	let currentWidth = Number.MAX_SAFE_INTEGER
+	let currentHeight = Number.MAX_SAFE_INTEGER
+	let url = ''
 
-  suffixes.forEach((suffix) => {
-    if (Object.prototype.hasOwnProperty.call(photo, "url_" + suffix)) {
-      const width = photo["width_" + suffix];
-      const height = photo["height_" + suffix];
+	for (const suffix of suffixes) {
+		if (Object.hasOwn(photo, 'url_' + suffix)) {
+			const width = photo['width_' + suffix] as number
+			const height = photo['height_' + suffix] as number
 
-      if (width >= minWidth && width < currentWidth && height >= minHeight && height < currentHeight) {
-        currentWidth = width;
-        currentHeight = height;
-        url = photo["url_" + suffix];
-      }
-    }
-  });
+			if (
+				width >= minWidth &&
+				width < currentWidth &&
+				height >= minHeight &&
+				height < currentHeight
+			) {
+				currentWidth = width
+				currentHeight = height
+				url = photo['url_' + suffix] as string
+			}
+		}
+	}
 
-  // Backup if we didn't find anything...
-  if (url == "") {
-    return biggestImageUrl(photo);
-  } else {
-    return url;
-  }
+	// Backup if we didn't find anything...
+	if (url === '') {
+		return biggestImageUrl(photo)
+	}
+
+	return url
 }
 
-function biggestImageUrl(photo: object): string {
-  // Not a lot of guarantees with flickr image availability...
-  // grab the biggest one we can find
-  let maxArea = 0;
-  let url = "";
+function biggestImageUrl(photo: Record<string, unknown>): string {
+	// Not a lot of guarantees with flickr image availability...
+	// grab the biggest one we can find
+	let maxArea = 0
+	let url = ''
 
-  suffixes.forEach((suffix) => {
-    if (Object.prototype.hasOwnProperty.call(photo, "url_" + suffix)) {
-      const area = photo["width_" + suffix] * photo["height_" + suffix];
+	for (const suffix of suffixes) {
+		if (Object.hasOwn(photo, 'url_' + suffix)) {
+			const area = (photo['width_' + suffix] as number) * (photo['height_' + suffix] as number)
 
-      if (area > maxArea) {
-        maxArea = area;
-        url = photo["url_" + suffix];
-      }
-    }
-  });
+			if (area > maxArea) {
+				maxArea = area
+				url = photo['url_' + suffix] as string
+			}
+		}
+	}
 
-  return url;
+	return url
 }
 
-function dateTakenIsReal(photo: object): boolean {
-  // If flickr doesn't know date taken, it can default to date upload
-  // to throw out that bogus data, we make sure they don't match
-  // purely matching time might not be great given different time zones...
-  // count on seconds and minutes not being identical and ignore hour
+function dateTakenIsReal(photo: Record<string, unknown>): boolean {
+	// If flickr doesn't know date taken, it can default to date upload
+	// to throw out that bogus data, we make sure they don't match
+	// purely matching time might not be great given different time zones...
+	// count on seconds and minutes not being identical and ignore hour
 
-  // Create js date objects to compare
-  const dateUploaded = new Date(photo["dateupload"] * 1000); // unix timestamp... time zone where uploaded?
-  const dateTaken = new Date(Date.parse(photo["datetaken"])); // sql timestamp... time zone where taken?
-  //const diffSeconds = Math.abs(dateUploaded.getTime() - dateTaken.getTime()) / 1000;
+	// Create js date objects to compare
+	const dateUploaded = new Date((photo.dateupload as number) * 1000) // Unix timestamp... time zone where uploaded?
+	const dateTaken = new Date(Date.parse(photo.datetaken as string)) // Sql timestamp... time zone where taken?
+	// const diffSeconds = Math.abs(dateUploaded.getTime() - dateTaken.getTime()) / 1000;
 
-  return !(
-    dateUploaded.getMinutes() === dateTaken.getMinutes() && dateUploaded.getSeconds() === dateTaken.getSeconds()
-  );
+	return !(
+		dateUploaded.getMinutes() === dateTaken.getMinutes() &&
+		dateUploaded.getSeconds() === dateTaken.getSeconds()
+	)
 }
 
-function ownerIsUnique(owner: string, photos: Array<object>): boolean {
-  return photos.every((photo) => photo["owner"] != owner);
+function ownerIsUnique(owner: string, photos: Array<Record<string, unknown>>): boolean {
+	return photos.every((photo) => photo.owner !== owner)
+}
+
+type Photo = {
+	datetaken: string
+	datetakengranularity: number
+	datetakenunknown: string
+	id: string
+	owner: string
+	tags: string
+	title: string
+}
+
+type PhotoResult = {
+	id: string
+	imgUrl: string
+	pageUrl: string
+	title: string
 }
 
 export async function getTemporalCollisions({
-  targetTime = new Date(),
-  maxSearchTimeSeconds = 5,
-  minImageWidth = Number.MAX_SAFE_INTEGER,
-  minImageHeight = Number.MAX_SAFE_INTEGER,
+	maxSearchTimeSeconds = 10,
+	minImageHeight = Number.MAX_SAFE_INTEGER,
+	minImageWidth = Number.MAX_SAFE_INTEGER,
+	targetTime = new Date(),
 }: {
-  targetTime?: Date;
-  maxSearchTimeSeconds?: number;
-  minImageWidth?: number;
-  minImageHeight?: number;
-} = {}): Promise<object> {
-  const flickrApiKey = process.env.FLICKR_API_KEY;
-  const flickr = new Flickr(flickrApiKey);
+	maxSearchTimeSeconds?: number
+	minImageHeight?: number
+	minImageWidth?: number
+	targetTime?: Date
+} = {}): Promise<Record<string, unknown>> {
+	const flickrApiKey = process.env.FLICKR_API_KEY
+	if (flickrApiKey === undefined) {
+		throw new Error('Missing FLICKR_API_KEY')
+	}
 
-  // Key: Date Taken
-  // Value: Array of image objects
-  const images = new Map<string, Array<object>>();
+	const flickr = new Flickr(flickrApiKey)
 
-  // Get list of recent images
+	// Key: Date Taken
+	// Value: Array of image objects
+	const images = new Map<string, Photo[]>()
 
-  // Unix timestamp
-  const nowish = Math.round(targetTime.getTime() / 1000) - 60 * 60 * 12; // look between 12 hours ago
-  const aWhileAgo = nowish - 60 * 60 * 24 * 5; // and up to five days ago...
+	// Get list of recent images
 
-  let timeElapsedSeconds = 0;
-  const searchStartTime = performance.now();
+	// Unix timestamp
+	const nowish = Math.round(targetTime.getTime() / 1000) - 60 * 60 * 12 // Look between 12 hours ago
+	const aWhileAgo = nowish - 60 * 60 * 24 * 5 // And up to five days ago...
 
-  let currentPage = 1;
-  let totalPages = Number.MAX_SAFE_INTEGER; // will be overwritten by actual number of pages
+	let timeElapsedSeconds = 0
+	const searchStartTime = performance.now()
 
-  while (timeElapsedSeconds < maxSearchTimeSeconds && currentPage < totalPages) {
-    // console.log("Loading page: " + currentPage + " / " + totalPages);
+	let currentPage = 1
+	let totalPages = Number.MAX_SAFE_INTEGER // Will be overwritten by actual number of pages
 
-    const response = await flickr.photos.search({
-      page: currentPage,
-      min_taken_date: aWhileAgo,
-      max_taken_date: nowish,
-      per_page: 500,
-      extras: "date_taken, date_upload, url_t, url_m, url_z, url_c, url_l, url_o",
-      sort: "date-taken-desc",
-    });
+	while (timeElapsedSeconds < maxSearchTimeSeconds && currentPage < totalPages) {
+		// Console.log("Loading page: " + currentPage + " / " + totalPages);
 
-    totalPages = response.body.photos.pages;
-    currentPage += 1;
+		const response = (await flickr.photos.search({
+			extras: 'date_taken, date_upload, url_t, url_m, url_z, url_c, url_l, url_o',
+			// eslint-disable-next-line @typescript-eslint/naming-convention
+			max_taken_date: nowish,
+			// eslint-disable-next-line @typescript-eslint/naming-convention
+			min_taken_date: aWhileAgo,
+			page: currentPage,
+			// eslint-disable-next-line @typescript-eslint/naming-convention
+			per_page: 500,
+			sort: 'date-taken-desc',
+		})) as {
+			// TODO real types...
+			body: {
+				photos: {
+					pages: number
+					photo: Photo[]
+				}
+			}
+		}
 
-    response.body.photos.photo.forEach((photo: object) => {
-      // Validation
-      if (photo["datetakengranularity"] == 0 && photo["datetakenunknown"] !== "1" && dateTakenIsReal(photo)) {
-        const dateTaken = photo["datetaken"];
-        if (!images.has(dateTaken)) {
-          images.set(dateTaken, [photo]);
-        } else {
-          // Make sure the owner is unique... collission groups can't share owners
-          if (ownerIsUnique(photo["owner"], images.get(dateTaken))) {
-            images.get(dateTaken).push(photo);
-          }
-          //  else {
-          //   console.log(`Skipping ${photo["owner"]} they are already in the collection!`);
-          // }
-        }
-      }
-    });
+		totalPages = response.body.photos.pages
+		currentPage += 1
 
-    timeElapsedSeconds = (performance.now() - searchStartTime) / 1000;
-  }
+		for (const photo of response.body.photos.photo) {
+			// Validation
+			if (
+				photo.datetakengranularity === 0 &&
+				photo.datetakenunknown !== '1' &&
+				dateTakenIsReal(photo)
+			) {
+				const dateTaken = photo.datetaken
+				if (images.has(dateTaken)) {
+					// Make sure the owner is unique... collision groups can't share owners
+					// eslint-disable-next-line max-depth
+					if (ownerIsUnique(photo.owner, images.get(dateTaken)!)) {
+						images.get(dateTaken)!.push(photo)
+					}
+					//  Else {
+					//   console.log(`Skipping ${photo["owner"]} they are already in the collection!`);
+					// }
+				} else {
+					images.set(dateTaken, [photo])
+				}
+			}
+		}
 
-  // console.log(`Found ${images.size} images in ${timeElapsedSeconds} seconds`);
+		timeElapsedSeconds = (performance.now() - searchStartTime) / 1000
+	}
 
-  // Filter to only those images with colissions
-  const collisionImages = new Map([...images].filter(([k, v]) => v.length > 2));
+	// Console.log(`Found ${images.size} images in ${timeElapsedSeconds} seconds`);
 
-  // Sort by number of collisions descending (breaks time!)
-  const sortedCollisionImages = new Map(
-    [...collisionImages.entries()].sort((a, b) => {
-      return b[1].length - a[1].length;
-    }),
-  );
+	// Filter to only those images with collisions
+	const collisionImages = new Map([...images].filter(([_, v]) => v.length > 2))
 
-  if (sortedCollisionImages.size > 0) {
-    const result = {
-      timeRequested: new Date(nowish * 1000),
-      timeMin: new Date(aWhileAgo * 1000),
-      timeMax: new Date(nowish * 1000),
-      imagesChecked: images.size,
-      collisions: [],
-    };
+	// Sort by number of collisions descending (breaks time!)
+	const sortedCollisionImages = new Map(
+		[...collisionImages.entries()].sort((a, b) => b[1].length - a[1].length),
+	)
 
-    // Just provide a single collision for now... the one with the most matches
-    const collision = sortedCollisionImages.values().next().value;
+	if (sortedCollisionImages.size > 0) {
+		const result: {
+			collisions: Array<{
+				photos: PhotoResult[]
+				time: Date
+			}>
+			imagesChecked: number
+			timeMax: Date
+			timeMin: Date
+			timeRequested: Date
+		} = {
+			collisions: [],
+			imagesChecked: images.size,
+			timeMax: new Date(nowish * 1000),
+			timeMin: new Date(aWhileAgo * 1000),
+			timeRequested: new Date(nowish * 1000),
+		}
 
-    const collisionResult = {
-      time: new Date(Date.parse(collision[0].datetaken)), // grab time from first photo
-      photos: [],
-    };
+		// Just provide a single collision for now... the one with the most matches
+		const collision = sortedCollisionImages.values().next().value as Photo[]
 
-    // URL construction based on https://www.flickr.com/services/api/misc.urls.html
-    collision.forEach((photo) => {
-      const photoResult = {
-        id: photo.id,
-        title: photo.title,
-        imgUrl: minSizeImageUrl(photo, minImageWidth, minImageHeight),
-        pageUrl: `https://www.flickr.com/photos/${photo.owner}/${photo.id}`,
-      };
+		const collisionResult: {
+			photos: PhotoResult[]
+			time: Date
+		} = {
+			photos: [],
+			time: new Date(Date.parse(collision[0].datetaken)), // Grab time from first photo
+		}
 
-      collisionResult.photos.push(photoResult);
-    });
+		// URL construction based on https://www.flickr.com/services/api/misc.urls.html
+		for (const photo of collision) {
+			const photoResult: PhotoResult = {
+				id: photo.id,
+				imgUrl: minSizeImageUrl(photo, minImageWidth, minImageHeight),
+				pageUrl: `https://www.flickr.com/photos/${photo.owner}/${photo.id}`,
+				title: photo.title,
+			}
 
-    result.collisions.push(collisionResult);
+			collisionResult.photos.push(photoResult)
+		}
 
-    // console.log(util.inspect(result, true, 10, true));
+		result.collisions.push(collisionResult)
 
-    return result;
-  } else {
-    throw new Error("No collisions!");
-  }
+		// Console.log(util.inspect(result, true, 10, true));
+
+		return result
+	}
+
+	throw new Error('No collisions!')
 }

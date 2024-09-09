@@ -1,12 +1,9 @@
-# ESLint Ignore
+# Prettier Ignore
 # Does not inherit from .gitignore
 
 # @kitschpatrol/repo-config boilerplate
 .astro/
 .DS_Store
-.env
-.env.*
-!.env.example
 .svelte-kit/
 {tmp,temp}/
 **/*.min.js
@@ -15,12 +12,12 @@ bower_components/
 build/
 coverage/
 dist/
-env.d.ts
 node_modules/
 vendor/
 
-# @kitschpatrol/eslint-config boilerplate
-/patches/
+# @kitschpatrol/prettier-config boilerplate
+pnpm-lock.yaml
+package-lock.json
 
 # Customizations
-/archive
+archive/

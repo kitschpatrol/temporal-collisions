@@ -1,0 +1,14 @@
+{
+	"$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+	"import": "@kitschpatrol/cspell-config",
+	"ignorePaths": ["archive/*"],
+	"words": [
+		"datetaken",
+		"datetakengranularity",
+		"datetakenunknown",
+		"dateupload",
+		"nosniff",
+		"nowish",
+		"SAMEORIGIN"
+	]
+}
