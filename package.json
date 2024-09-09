@@ -40,7 +40,6 @@
 		"@kitschpatrol/shared-config": "^4.7.5",
 		"@types/lodash": "^4.17.7",
 		"@types/node": "^20.16.5",
-		"netlify-cli": "^17.35.0",
 		"rimraf": "^5.0.10",
 		"typescript": "^5.5.4",
 		"vitest": "^2.0.5"
