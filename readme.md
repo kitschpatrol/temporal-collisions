@@ -56,9 +56,7 @@ console.log(util.inspect(collisions, true, 10, true))
 Request
 
 ```sh
-/api/find?maxSearchTime=5 &
-minWidth=834 &
-minHeight=834
+curl -s "https://temporal-collisions.netlify.app/api/find?maxSearchTime=10&minWidth=834&minHeight=834" | jq
 ```
 
 Response:
@@ -67,43 +65,37 @@ Response:
 {
   "status": "success",
   "results": {
-    "timeRequested": "2022-03-26T12:42:37.000Z",
-    "timeMin": "2022-03-21T12:42:37.000Z",
-    "timeMax": "2022-03-26T12:42:37.000Z",
-    "imagesChecked": 1129,
+    "timeRequested": "2024-09-08T15:43:23.000Z",
+    "timeMin": "2024-09-03T15:43:23.000Z",
+    "timeMax": "2024-09-08T15:43:23.000Z",
+    "imagesChecked": 295,
     "collisions": [
       {
-        "time": "2022-03-26T19:31:40.000Z",
+        "time": "2024-09-08T22:20:00.000Z",
         "photos": [
           {
-            "id": "51963038879",
-            "title": "",
-            "imgUrl": "https://live.staticflickr.com/65535/51963038879_6f1b0382da_b.jpg",
-            "pageUrl": "https://www.flickr.com/photos/91689596@N04/51963038879"
+            "id": "53980112124",
+            "title": "N-2024-09-08-2220_f",
+            "imgUrl": "https://live.staticflickr.com/65535/53980112124_ccffafdb49_o.jpg",
+            "pageUrl": "https://www.flickr.com/photos/149567335@N07/53980112124"
           },
           {
-            "id": "51961868696",
-            "title": "L1420829",
-            "imgUrl": "https://live.staticflickr.com/65535/51961868696_a8b621fd8c_o.jpg",
-            "pageUrl": "https://www.flickr.com/photos/110074903@N02/51961868696"
+            "id": "53980112424",
+            "title": "N-2024-09-08-2220_f",
+            "imgUrl": "https://live.staticflickr.com/65535/53980112424_b711becde9_o.jpg",
+            "pageUrl": "https://www.flickr.com/photos/97102756@N07/53980112424"
           },
           {
-            "id": "51963467565",
-            "title": "ALF-2196",
-            "imgUrl": "https://live.staticflickr.com/65535/51963467565_30580b093e_o.jpg",
-            "pageUrl": "https://www.flickr.com/photos/146063064@N08/51963467565"
+            "id": "53980228840",
+            "title": "N-2024-09-08-2220_f",
+            "imgUrl": "https://live.staticflickr.com/65535/53980228840_e58586ffbe_o.jpg",
+            "pageUrl": "https://www.flickr.com/photos/185288333@N07/53980228840"
           },
           {
-            "id": "51962848278",
-            "title": "Gdansk - Royal Route",
-            "imgUrl": "https://live.staticflickr.com/65535/51962848278_56c7fc69d9_o.jpg",
-            "pageUrl": "https://www.flickr.com/photos/184503435@N04/51962848278"
-          },
-          {
-            "id": "51961200282",
-            "title": "IMG_2658",
-            "imgUrl": "https://live.staticflickr.com/65535/51961200282_38fee67b8d_o.jpg",
-            "pageUrl": "https://www.flickr.com/photos/140700773@N08/51961200282"
+            "id": "53981233084",
+            "title": "20240908_2220_0657",
+            "imgUrl": "https://live.staticflickr.com/65535/53981233084_cf1fa7f8ae_o.jpg",
+            "pageUrl": "https://www.flickr.com/photos/201213898@N02/53981233084"
           }
         ]
       }
