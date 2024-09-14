@@ -3,10 +3,7 @@
 	"version": "1.0.1",
 	"type": "module",
 	"description": "See photos from identical instants in time.",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/kitschpatrol/temporal-collisions.git"
-	},
+	"repository": "github:kitschpatrol/temporal-collisions",
 	"homepage": "https://frontiernerds.com/temporal-collisions",
 	"author": {
 		"name": "Eric Mika",
@@ -15,7 +12,7 @@
 	},
 	"license": "Unlicensed",
 	"private": true,
-	"packageManager": "pnpm@9.9.0",
+	"packageManager": "pnpm@9.10.0",
 	"engines": {
 		"node": ">=20.0.0",
 		"pnpm": ">=9.0.0"
@@ -26,7 +23,7 @@
 		"flickr"
 	],
 	"scripts": {
-		"clean": "rimraf ./pnpm-lock.yaml ; mv .env temp ; git clean -fdX ; mv temp .env",
+		"clean": "git rm -f pnpm-lock.yaml ; mv .env temp ; git clean -fdX ; mv temp .env",
 		"fix": "shared-config --fix",
 		"lint": "shared-config --lint",
 		"test": "vitest"
@@ -37,11 +34,11 @@
 		"flickr-sdk": "^6.3.0"
 	},
 	"devDependencies": {
-		"@kitschpatrol/shared-config": "^4.7.5",
+		"@kitschpatrol/dict-en-wiktionary": "^1.0.2",
+		"@kitschpatrol/shared-config": "^4.7.9",
 		"@types/lodash": "^4.17.7",
-		"@types/node": "^20.16.5",
-		"rimraf": "^5.0.10",
-		"typescript": "^5.5.4",
-		"vitest": "^2.0.5"
+		"@types/node": "20.0.0",
+		"typescript": "^5.6.2",
+		"vitest": "^2.1.1"
 	}
 }

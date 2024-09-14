@@ -121,8 +121,8 @@ export async function getTemporalCollisions({
 	// Get list of recent images
 
 	// Unix timestamp
-	const nowish = Math.round(targetTime.getTime() / 1000) - 60 * 60 * 12 // Look between 12 hours ago
-	const aWhileAgo = nowish - 60 * 60 * 24 * 5 // And up to five days ago...
+	const nowIsh = Math.round(targetTime.getTime() / 1000) - 60 * 60 * 12 // Look between 12 hours ago
+	const aWhileAgo = nowIsh - 60 * 60 * 24 * 5 // And up to five days ago...
 
 	let timeElapsedSeconds = 0
 	const searchStartTime = performance.now()
@@ -136,7 +136,7 @@ export async function getTemporalCollisions({
 		const response = (await flickr.photos.search({
 			extras: 'date_taken, date_upload, url_t, url_m, url_z, url_c, url_l, url_o',
 			// eslint-disable-next-line @typescript-eslint/naming-convention
-			max_taken_date: nowish,
+			max_taken_date: nowIsh,
 			// eslint-disable-next-line @typescript-eslint/naming-convention
 			min_taken_date: aWhileAgo,
 			page: currentPage,
@@ -205,13 +205,13 @@ export async function getTemporalCollisions({
 		} = {
 			collisions: [],
 			imagesChecked: images.size,
-			timeMax: new Date(nowish * 1000),
+			timeMax: new Date(nowIsh * 1000),
 			timeMin: new Date(aWhileAgo * 1000),
-			timeRequested: new Date(nowish * 1000),
+			timeRequested: new Date(nowIsh * 1000),
 		}
 
 		// Just provide a single collision for now... the one with the most matches
-		const collision = sortedCollisionImages.values().next().value as Photo[]
+		const collision = sortedCollisionImages.values().next().value!
 
 		const collisionResult: {
 			photos: PhotoResult[]

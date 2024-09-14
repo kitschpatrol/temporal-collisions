@@ -1,14 +1,13 @@
 {
 	"$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
-	"import": "@kitschpatrol/cspell-config",
 	"ignorePaths": ["archive/*"],
+	"import": ["@kitschpatrol/cspell-config", "@kitschpatrol/dict-en-wiktionary/cspell-ext.json"],
 	"words": [
+		"sameorigin",
+		"nosniff",
+		"dateupload",
 		"datetaken",
 		"datetakengranularity",
-		"datetakenunknown",
-		"dateupload",
-		"nosniff",
-		"nowish",
-		"SAMEORIGIN"
+		"datetakenunknown"
 	]
 }
