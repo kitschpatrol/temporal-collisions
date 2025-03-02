@@ -43,12 +43,12 @@ Note that requests can take an indefinite amount of time given the breadth of th
 ### As a Node library
 
 ```ts
-import { getTemporalCollisions } from '../../src/main'
-import util from 'util'
+import { inspect } from 'node:util'
+import { getTemporalCollisions } from './src/main'
 
 const collisions = await getTemporalCollisions({ minImageWidth: 278, minImageHeight: 278 })
 
-console.log(util.inspect(collisions, true, 10, true))
+console.log(inspect(collisions, true, 10, true))
 ```
 
 ### Via web API

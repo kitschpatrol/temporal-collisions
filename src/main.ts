@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-jsdoc */
+
 import 'dotenv/config'
 import Flickr from 'flickr-sdk'
 import { performance } from 'node:perf_hooks'
@@ -65,8 +67,8 @@ function dateTakenIsReal(photo: Record<string, unknown>): boolean {
 	// count on seconds and minutes not being identical and ignore hour
 
 	// Create js date objects to compare
-	const dateUploaded = new Date((photo.dateupload as number) * 1000) // Unix timestamp... time zone where uploaded?
-	const dateTaken = new Date(Date.parse(photo.datetaken as string)) // Sql timestamp... time zone where taken?
+	const dateUploaded = new Date((photo.dateupload as number) * 1000) // UNIX timestamp... time zone where uploaded?
+	const dateTaken = new Date(Date.parse(photo.datetaken as string)) // SQL timestamp... time zone where taken?
 	// const diffSeconds = Math.abs(dateUploaded.getTime() - dateTaken.getTime()) / 1000;
 
 	return !(
@@ -120,7 +122,7 @@ export async function getTemporalCollisions({
 
 	// Get list of recent images
 
-	// Unix timestamp
+	// UNIX timestamp
 	const nowIsh = Math.round(targetTime.getTime() / 1000) - 60 * 60 * 12 // Look between 12 hours ago
 	const aWhileAgo = nowIsh - 60 * 60 * 24 * 5 // And up to five days ago...
 
@@ -135,12 +137,12 @@ export async function getTemporalCollisions({
 
 		const response = (await flickr.photos.search({
 			extras: 'date_taken, date_upload, url_t, url_m, url_z, url_c, url_l, url_o',
-			// eslint-disable-next-line @typescript-eslint/naming-convention
+			// eslint-disable-next-line ts/naming-convention
 			max_taken_date: nowIsh,
-			// eslint-disable-next-line @typescript-eslint/naming-convention
+			// eslint-disable-next-line ts/naming-convention
 			min_taken_date: aWhileAgo,
 			page: currentPage,
-			// eslint-disable-next-line @typescript-eslint/naming-convention
+			// eslint-disable-next-line ts/naming-convention
 			per_page: 500,
 			sort: 'date-taken-desc',
 		})) as {

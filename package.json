@@ -1,31 +1,29 @@
 {
 	"name": "temporal-collisions",
 	"version": "1.0.1",
-	"type": "module",
-	"description": "See photos from identical instants in time.",
-	"repository": "github:kitschpatrol/temporal-collisions",
-	"homepage": "https://frontiernerds.com/temporal-collisions",
-	"author": {
-		"name": "Eric Mika",
-		"email": "eric@ericmika.com",
-		"url": "https://ericmika.com"
-	},
-	"license": "Unlicensed",
 	"private": true,
-	"packageManager": "pnpm@9.10.0",
-	"engines": {
-		"node": ">=20.0.0",
-		"pnpm": ">=9.0.0"
-	},
+	"description": "See photos from identical instants in time.",
 	"keywords": [
 		"itp",
 		"simultaneity",
 		"flickr"
 	],
+	"homepage": "https://frontiernerds.com/temporal-collisions",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kitschpatrol/temporal-collisions"
+	},
+	"license": "Unlicensed",
+	"author": {
+		"name": "Eric Mika",
+		"email": "eric@ericmika.com",
+		"url": "https://ericmika.com"
+	},
+	"type": "module",
 	"scripts": {
 		"clean": "git rm -f pnpm-lock.yaml ; mv .env temp ; git clean -fdX ; mv temp .env",
-		"fix": "shared-config --fix",
-		"lint": "shared-config --lint",
+		"fix": "kpi fix",
+		"lint": "kpi lint",
 		"test": "vitest"
 	},
 	"dependencies": {
@@ -35,10 +33,24 @@
 	},
 	"devDependencies": {
 		"@kitschpatrol/dict-en-wiktionary": "^1.0.2",
-		"@kitschpatrol/shared-config": "^4.7.9",
+		"@kitschpatrol/shared-config": "^5.0.6",
 		"@types/lodash": "^4.17.7",
-		"@types/node": "20.0.0",
-		"typescript": "^5.6.2",
+		"@types/node": "^22.0.0",
+		"typescript": "~5.7.3",
 		"vitest": "^2.1.1"
+	},
+	"packageManager": "pnpm@10.5.2",
+	"engines": {
+		"node": ">=22.0.0",
+		"pnpm": ">=10.0.0"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild",
+			"puppeteer"
+		],
+		"overrides": {
+			"eslint-plugin-markdown": "^5.1.0"
+		}
 	}
 }
