@@ -99,7 +99,7 @@ type PhotoResult = {
 }
 
 export async function getTemporalCollisions({
-	maxSearchTimeSeconds = 10,
+	maxSearchTimeSeconds = 15,
 	minImageHeight = Number.MAX_SAFE_INTEGER,
 	minImageWidth = Number.MAX_SAFE_INTEGER,
 	targetTime = new Date(),
