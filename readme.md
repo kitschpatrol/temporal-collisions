@@ -46,7 +46,7 @@ Note that requests can take an indefinite amount of time given the breadth of th
 import { inspect } from 'node:util'
 import { getTemporalCollisions } from './src/main'
 
-const collisions = await getTemporalCollisions({ minImageWidth: 278, minImageHeight: 278 })
+const collisions = await getTemporalCollisions({ minImageHeight: 278, minImageWidth: 278 })
 
 console.log(inspect(collisions, true, 10, true))
 ```

@@ -11,7 +11,7 @@
 	"homepage": "https://frontiernerds.com/temporal-collisions",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/kitschpatrol/temporal-collisions"
+		"url": "git+https://github.com/kitschpatrol/temporal-collisions.git"
 	},
 	"license": "Unlicensed",
 	"author": {
@@ -32,17 +32,16 @@
 		"flickr-sdk": "^6.3.0"
 	},
 	"devDependencies": {
-		"@kitschpatrol/dict-en-wiktionary": "^1.1.0",
-		"@kitschpatrol/shared-config": "^5.0.6",
+		"@kitschpatrol/dict-en-wiktionary": "^1.1.1",
+		"@kitschpatrol/shared-config": "^5.2.0",
 		"@types/lodash": "^4.17.16",
-		"@types/node": "^22.13.8",
+		"@types/node": "^22.13.9",
 		"typescript": "~5.7.3",
 		"vitest": "^3.0.7"
 	},
 	"packageManager": "pnpm@10.5.2",
 	"engines": {
-		"node": ">=22.0.0",
-		"pnpm": ">=10.0.0"
+		"node": ">=22.0.0"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
