@@ -16,7 +16,7 @@
   }
 } -->
 
-[![License: Unlicensed](https://img.shields.io/badge/License-Unlicensed-yellow.svg)](https://opensource.org/licenses/Unlicensed)
+[![License: UNLICENSED](https://img.shields.io/badge/License-UNLICENSED-yellow.svg)](https://opensource.org/licenses/UNLICENSED)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/91ce5ae9-2c2b-4ddd-9672-f08504d64d7c/deploy-status)](https://app.netlify.com/sites/temporal-collisions/deploys)
 
 <!-- /badges -->
@@ -29,11 +29,12 @@
 
 ## Overview
 
-This is a service which finds recent Flickr photos which were taken at the exact same second.
+This is a service which finds recent Flickr photos which were taken at the exact same second. It was created in 2009.
 
 It's implemented in TypeScript + Node.js, and is exposed through a simple API service intended for deployment on Netlify. It could probably be deployed to Cloudflare Workers as well since it does not leverage node-specific APIs. The service was ported from its original PHP implementation (saved in `/Archive`) in March 2022.
 
 It's referenced here: <https://frontiernerds.com/something-about-simultaneity>
+
 And the API is consumed and visualized here: <https://frontiernerds.com/temporal-collisions>
 
 ## Usage
@@ -46,7 +47,7 @@ Note that requests can take an indefinite amount of time given the breadth of th
 import { inspect } from 'node:util'
 import { getTemporalCollisions } from './src/main'
 
-const collisions = await getTemporalCollisions({ minImageHeight: 278, minImageWidth: 278 })
+const collisions = await getTemporalCollisions({ minImageWidth: 278, minImageHeight: 278 })
 
 console.log(inspect(collisions, true, 10, true))
 ```

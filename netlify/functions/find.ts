@@ -1,4 +1,4 @@
-import { type Handler } from '@netlify/functions'
+import type { Handler } from '@netlify/functions'
 import { getTemporalCollisions } from '../../src/main'
 
 const handler: Handler = async (event) => {
@@ -7,6 +7,7 @@ const handler: Handler = async (event) => {
 	try {
 		// Netlify Functions timeout after 10 seconds
 		const collisions = await getTemporalCollisions(
+			// eslint-disable-next-line ts/no-unsafe-type-assertion
 			event.queryStringParameters as Record<string, unknown>,
 		)
 		response.status = 'success'

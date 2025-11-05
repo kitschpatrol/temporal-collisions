@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-unsafe-type-assertion */
 /* eslint-disable jsdoc/require-jsdoc */
 
 import 'dotenv/config'
@@ -191,7 +192,7 @@ export async function getTemporalCollisions({
 
 	// Sort by number of collisions descending (breaks time!)
 	const sortedCollisionImages = new Map(
-		[...collisionImages.entries()].sort((a, b) => b[1].length - a[1].length),
+		[...collisionImages.entries()].toSorted((a, b) => b[1].length - a[1].length),
 	)
 
 	if (sortedCollisionImages.size > 0) {
