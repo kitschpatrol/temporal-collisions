@@ -99,12 +99,36 @@ type PhotoResult = {
 	title: string
 }
 
+/**
+ * Rounds a timestamp to the nearest interval based on maxDistanceSeconds
+ * @param dateTaken - SQL timestamp string (e.g., "2023-11-05 14:30:25")
+ * @param maxDistanceSeconds - Number of seconds to round to (0 means exact match)
+ * @returns A string key representing the rounded time bucket
+ */
+function getRoundedTimeKey(dateTaken: string, maxDistanceSeconds: number): string {
+	if (maxDistanceSeconds === 0) {
+		return dateTaken
+	}
+
+	// Parse the date string and get timestamp in seconds
+	const dateMs = Date.parse(dateTaken)
+	const dateSeconds = Math.floor(dateMs / 1000)
+
+	// Round down to the nearest interval
+	const roundedSeconds = Math.floor(dateSeconds / maxDistanceSeconds) * maxDistanceSeconds
+
+	// Return a string key (using the rounded timestamp)
+	return roundedSeconds.toString()
+}
+
 export async function getTemporalCollisions({
+	maxDistanceSeconds = 3,
 	maxSearchTimeSeconds = 15,
 	minImageHeight = Number.MAX_SAFE_INTEGER,
 	minImageWidth = Number.MAX_SAFE_INTEGER,
 	targetTime = new Date(),
 }: {
+	maxDistanceSeconds?: number
 	maxSearchTimeSeconds?: number
 	minImageHeight?: number
 	minImageWidth?: number
@@ -166,18 +190,18 @@ export async function getTemporalCollisions({
 				photo.datetakenunknown !== '1' &&
 				dateTakenIsReal(photo)
 			) {
-				const dateTaken = photo.datetaken
-				if (images.has(dateTaken)) {
+				const timeKey = getRoundedTimeKey(photo.datetaken, maxDistanceSeconds)
+				if (images.has(timeKey)) {
 					// Make sure the owner is unique... collision groups can't share owners
 					// eslint-disable-next-line max-depth
-					if (ownerIsUnique(photo.owner, images.get(dateTaken)!)) {
-						images.get(dateTaken)!.push(photo)
+					if (ownerIsUnique(photo.owner, images.get(timeKey)!)) {
+						images.get(timeKey)!.push(photo)
 					}
 					//  Else {
 					//   console.log(`Skipping ${photo["owner"]} they are already in the collection!`);
 					// }
 				} else {
-					images.set(dateTaken, [photo])
+					images.set(timeKey, [photo])
 				}
 			}
 		}
@@ -192,7 +216,8 @@ export async function getTemporalCollisions({
 
 	// Sort by number of collisions descending (breaks time!)
 	const sortedCollisionImages = new Map(
-		[...collisionImages.entries()].toSorted((a, b) => b[1].length - a[1].length),
+		// eslint-disable-next-line unicorn/no-array-sort
+		[...collisionImages.entries()].sort((a, b) => b[1].length - a[1].length),
 	)
 
 	if (sortedCollisionImages.size > 0) {

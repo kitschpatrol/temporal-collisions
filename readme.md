@@ -57,7 +57,7 @@ console.log(inspect(collisions, true, 10, true))
 Request
 
 ```sh
-curl -s "https://temporal-collisions.netlify.app/api/find?maxSearchTime=10&minWidth=834&minHeight=834" | jq
+curl -s "https://temporal-collisions.netlify.app/api/find?maxDistanceSeconds=0&maxSearchTime=10&minWidth=834&minHeight=834" | jq
 ```
 
 Response:
