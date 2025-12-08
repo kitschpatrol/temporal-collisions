@@ -7,6 +7,7 @@
 <!-- /title -->
 
 <!-- badges {
+  npm: [],
   custom: {
     "Netlify Status": {
       image: "https://api.netlify.com/api/v1/badges/91ce5ae9-2c2b-4ddd-9672-f08504d64d7c/deploy-status",

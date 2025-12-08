@@ -72,9 +72,9 @@ function dateTakenIsReal(photo: Record<string, unknown>): boolean {
 	const dateTaken = new Date(Date.parse(photo.datetaken as string)) // SQL timestamp... time zone where taken?
 	// const diffSeconds = Math.abs(dateUploaded.getTime() - dateTaken.getTime()) / 1000;
 
-	return !(
-		dateUploaded.getMinutes() === dateTaken.getMinutes() &&
-		dateUploaded.getSeconds() === dateTaken.getSeconds()
+	return (
+		dateUploaded.getMinutes() !== dateTaken.getMinutes() ||
+		dateUploaded.getSeconds() !== dateTaken.getSeconds()
 	)
 }
 
