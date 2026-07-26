@@ -1,7 +1,7 @@
 /* eslint-disable jsdoc/require-jsdoc */
 
 import 'dotenv/config'
-import Flickr from 'flickr-sdk'
+import { createFlickr } from 'flickr-sdk'
 import { performance } from 'node:perf_hooks'
 // Import util from "util";
 
@@ -145,7 +145,7 @@ export async function getTemporalCollisions({
 		throw new Error('Missing FLICKR_API_KEY')
 	}
 
-	const flickr = new Flickr(flickrApiKey)
+	const { flickr } = createFlickr(flickrApiKey)
 
 	// Key: Date Taken
 	// Value: Array of image objects
@@ -166,31 +166,29 @@ export async function getTemporalCollisions({
 	while (timeElapsedSeconds < maxSearchTimeSeconds && currentPage < totalPages) {
 		// Console.log("Loading page: " + currentPage + " / " + totalPages);
 
-		const response = (await flickr.photos.search({
+		const response = (await flickr('flickr.photos.search', {
 			extras: 'date_taken, date_upload, url_t, url_m, url_z, url_c, url_l, url_o',
 			// eslint-disable-next-line ts/naming-convention
-			max_taken_date: nowIsh,
+			max_taken_date: String(nowIsh),
 			// eslint-disable-next-line ts/naming-convention
-			min_taken_date: aWhileAgo,
-			page: currentPage,
+			min_taken_date: String(aWhileAgo),
+			page: String(currentPage),
 			// eslint-disable-next-line ts/naming-convention
-			per_page: 500,
+			per_page: '500',
 			sort: 'date-taken-desc',
 		})) as {
 			// TODO real types...
-			body: {
-				photos: {
-					pages: number
-					photo: Photo[]
-				}
+			photos: {
+				pages: number
+				photo: Photo[]
 			}
 		}
 
-		totalPages = response.body.photos.pages
+		totalPages = response.photos.pages
 		currentPage += 1
 
 		// Validation
-		const validPhotos = response.body.photos.photo.filter(
+		const validPhotos = response.photos.photo.filter(
 			(photo) =>
 				photo.datetakengranularity === 0 &&
 				photo.datetakenunknown !== '1' &&
