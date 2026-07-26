@@ -1,4 +1,3 @@
-/* eslint-disable ts/no-unsafe-type-assertion */
 /* eslint-disable jsdoc/require-jsdoc */
 
 import 'dotenv/config'
@@ -16,20 +15,22 @@ function minSizeImageUrl(photo: Record<string, unknown>, minWidth: number, minHe
 	let url = ''
 
 	for (const suffix of suffixes) {
-		if (Object.hasOwn(photo, 'url_' + suffix)) {
-			const width = photo['width_' + suffix] as number
-			const height = photo['height_' + suffix] as number
+		if (!Object.hasOwn(photo, 'url_' + suffix)) {
+			continue
+		}
 
-			if (
-				width >= minWidth &&
-				width < currentWidth &&
-				height >= minHeight &&
-				height < currentHeight
-			) {
-				currentWidth = width
-				currentHeight = height
-				url = photo['url_' + suffix] as string
-			}
+		const width = photo['width_' + suffix] as number
+		const height = photo['height_' + suffix] as number
+
+		if (
+			width >= minWidth &&
+			width < currentWidth &&
+			height >= minHeight &&
+			height < currentHeight
+		) {
+			currentWidth = width
+			currentHeight = height
+			url = photo['url_' + suffix] as string
 		}
 	}
 
@@ -48,13 +49,15 @@ function biggestImageUrl(photo: Record<string, unknown>): string {
 	let url = ''
 
 	for (const suffix of suffixes) {
-		if (Object.hasOwn(photo, 'url_' + suffix)) {
-			const area = (photo['width_' + suffix] as number) * (photo['height_' + suffix] as number)
+		if (!Object.hasOwn(photo, 'url_' + suffix)) {
+			continue
+		}
 
-			if (area > maxArea) {
-				maxArea = area
-				url = photo['url_' + suffix] as string
-			}
+		const area = (photo['width_' + suffix] as number) * (photo['height_' + suffix] as number)
+
+		if (area > maxArea) {
+			maxArea = area
+			url = photo['url_' + suffix] as string
 		}
 	}
 
@@ -101,8 +104,11 @@ type PhotoResult = {
 
 /**
  * Rounds a timestamp to the nearest interval based on maxDistanceSeconds
+ *
  * @param dateTaken - SQL timestamp string (e.g., "2023-11-05 14:30:25")
- * @param maxDistanceSeconds - Number of seconds to round to (0 means exact match)
+ * @param maxDistanceSeconds - Number of seconds to round to (0 means exact
+ *   match)
+ *
  * @returns A string key representing the rounded time bucket
  */
 function getRoundedTimeKey(dateTaken: string, maxDistanceSeconds: number): string {
@@ -183,26 +189,27 @@ export async function getTemporalCollisions({
 		totalPages = response.body.photos.pages
 		currentPage += 1
 
-		for (const photo of response.body.photos.photo) {
-			// Validation
-			if (
+		// Validation
+		const validPhotos = response.body.photos.photo.filter(
+			(photo) =>
 				photo.datetakengranularity === 0 &&
 				photo.datetakenunknown !== '1' &&
-				dateTakenIsReal(photo)
-			) {
-				const timeKey = getRoundedTimeKey(photo.datetaken, maxDistanceSeconds)
-				if (images.has(timeKey)) {
-					// Make sure the owner is unique... collision groups can't share owners
-					// eslint-disable-next-line max-depth
-					if (ownerIsUnique(photo.owner, images.get(timeKey)!)) {
-						images.get(timeKey)!.push(photo)
-					}
-					//  Else {
-					//   console.log(`Skipping ${photo["owner"]} they are already in the collection!`);
-					// }
-				} else {
-					images.set(timeKey, [photo])
+				dateTakenIsReal(photo),
+		)
+
+		for (const photo of validPhotos) {
+			const timeKey = getRoundedTimeKey(photo.datetaken, maxDistanceSeconds)
+			if (images.has(timeKey)) {
+				// Make sure the owner is unique... collision groups can't share owners
+
+				if (ownerIsUnique(photo.owner, images.get(timeKey)!)) {
+					images.get(timeKey)!.push(photo)
 				}
+				//  Else {
+				//   console.log(`Skipping ${photo["owner"]} they are already in the collection!`);
+				// }
+			} else {
+				images.set(timeKey, [photo])
 			}
 		}
 
@@ -217,7 +224,7 @@ export async function getTemporalCollisions({
 	// Sort by number of collisions descending (breaks time!)
 	const sortedCollisionImages = new Map(
 		// eslint-disable-next-line unicorn/no-array-sort
-		[...collisionImages.entries()].sort((a, b) => b[1].length - a[1].length),
+		[...collisionImages].sort((a, b) => b[1].length - a[1].length),
 	)
 
 	if (sortedCollisionImages.size > 0) {
@@ -246,7 +253,7 @@ export async function getTemporalCollisions({
 			time: Date
 		} = {
 			photos: [],
-			time: new Date(Date.parse(collision[0].datetaken)), // Grab time from first photo
+			time: new Date(Date.parse(collision[0]!.datetaken)), // Grab time from first photo
 		}
 
 		// URL construction based on https://www.flickr.com/services/api/misc.urls.html
