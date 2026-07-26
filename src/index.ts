@@ -1,8 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 
-import 'dotenv/config'
 import { createFlickr } from 'flickr-sdk'
-import { performance } from 'node:perf_hooks'
 // Import util from "util";
 
 // Kind of a hard-coded duplication from the "extras" object in the Flickr photo search query
@@ -134,11 +132,11 @@ export async function getTemporalCollisions({
 	minImageWidth = Number.MAX_SAFE_INTEGER,
 	targetTime = new Date(),
 }: {
-	maxDistanceSeconds?: number
-	maxSearchTimeSeconds?: number
-	minImageHeight?: number
-	minImageWidth?: number
-	targetTime?: Date
+	maxDistanceSeconds?: number | undefined
+	maxSearchTimeSeconds?: number | undefined
+	minImageHeight?: number | undefined
+	minImageWidth?: number | undefined
+	targetTime?: Date | undefined
 } = {}): Promise<Record<string, unknown>> {
 	const flickrApiKey = process.env.FLICKR_API_KEY
 	if (flickrApiKey === undefined) {

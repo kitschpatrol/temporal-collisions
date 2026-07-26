@@ -6,17 +6,10 @@
 
 <!-- badges ({
   npm: [],
-  custom: {
-    "Netlify Status": {
-      image: "https://api.netlify.com/api/v1/badges/91ce5ae9-2c2b-4ddd-9672-f08504d64d7c/deploy-status",
-      link: "https://app.netlify.com/sites/temporal-collisions/deploys",
-    },
-
-  }
 }) -->
 
+[![License: CC-BY-NC-SA-4.0](https://img.shields.io/badge/License-CC--BY--NC--SA--4.0-yellow.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
 [![CI](https://github.com/kitschpatrol/temporal-collisions/actions/workflows/ci.yml/badge.svg)](https://github.com/kitschpatrol/temporal-collisions/actions/workflows/ci.yml)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/91ce5ae9-2c2b-4ddd-9672-f08504d64d7c/deploy-status)](https://app.netlify.com/sites/temporal-collisions/deploys)
 
 <!-- /badges -->
 
@@ -30,33 +23,20 @@
 
 This is a service which finds recent Flickr photos which were taken at the exact same second. It was created in 2009.
 
-It's implemented in TypeScript + Node.js, and is exposed through a simple API service intended for deployment on Netlify. It could probably be deployed to Cloudflare Workers as well since it does not leverage node-specific APIs. The service was ported from its original PHP implementation (saved in `/Archive`) in March 2022.
+It's implemented in TypeScript, and is exposed through a simple API service deployed to a Cloudflare Worker. The service was ported from its original PHP implementation (saved in `/archive`) in March 2022.
 
-It's referenced here: <https://frontiernerds.com/something-about-simultaneity>
-
-And the API is consumed and visualized here: <https://frontiernerds.com/temporal-collisions>
+An interactive version is available on [frontiernerds.com](https://frontiernerds.com/temporal-collisions), along with a [blog post](https://frontiernerds.com/something-about-simultaneity).
 
 ## Usage
 
-Note that requests can take an indefinite amount of time given the breadth of the search involved, so the request operates on a best-effort basis according to the `maxSearchTime` (in seconds) parameter that's passed;
-
-### As a Node library
-
-```ts
-import { inspect } from 'node:util'
-import { getTemporalCollisions } from './src/main'
-
-const collisions = await getTemporalCollisions({ minImageWidth: 278, minImageHeight: 278 })
-
-console.log(inspect(collisions, true, 10, true))
-```
+Requests can take an indefinite amount of time given the breadth of the search involved, so the request operates on a best-effort basis according to the `maxSearchTimeSeconds` parameter that's passed. The API clamps `maxSearchTimeSeconds` to 60 seconds.
 
 ### Via web API
 
 Request
 
 ```sh
-curl -s "https://temporal-collisions.netlify.app/api/find?maxDistanceSeconds=0&maxSearchTime=10&minWidth=834&minHeight=834" | jq
+curl -s "https://frontiernerds.com/api/temporal-collisions?maxDistanceSeconds=0&maxSearchTimeSeconds=10&minImageWidth=834&minImageHeight=834" | jq
 ```
 
 Response:
@@ -104,16 +84,23 @@ Response:
 }
 ```
 
-## Development
+### As a module
 
-### Setup
+_This package is not published to NPM, so module resolution is up to the user._
 
-```sh
-pnpm i
+```ts
+import { inspect } from 'node:util'
+import { getTemporalCollisions } from 'temporal-collisions'
+
+const collisions = await getTemporalCollisions({ minImageWidth: 278, minImageHeight: 278 })
+
+console.log(inspect(collisions, true, 10, true))
 ```
 
-### Testing
+<!-- license -->
 
-```sh
-pnpm run test
-```
+## License
+
+[CC-BY-NC-SA-4.0](license.txt) © [Eric Mika](https://ericmika.com)
+
+<!-- /license -->

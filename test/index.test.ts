@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { getTemporalCollisions } from '../src/main'
+import { getTemporalCollisions } from '../src/index'
 
 it(
 	'gets recent collisions',

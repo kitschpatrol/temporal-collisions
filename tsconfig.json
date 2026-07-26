@@ -4,5 +4,5 @@
 		"types": ["node", "lodash"]
 	},
 	"include": ["**/**.*"],
-	"exclude": ["dist/"]
+	"exclude": ["dist"]
 }

@@ -21,4 +21,5 @@ node_modules/
 vendor/
 
 # Customizations
+.wrangler/
 /.claude
