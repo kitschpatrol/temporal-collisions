@@ -1,6 +1,6 @@
 {
 	"name": "temporal-collisions",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"private": true,
 	"description": "See photos from identical instants in time.",
 	"keywords": [
