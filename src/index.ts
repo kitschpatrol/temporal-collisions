@@ -21,23 +21,21 @@ function minSizeImageUrl(photo: Record<string, unknown>, minWidth: number, minHe
 		const height = photo['height_' + suffix] as number
 
 		if (
-			width >= minWidth &&
-			width < currentWidth &&
-			height >= minHeight &&
-			height < currentHeight
+			!(width >= minWidth) ||
+			!(width < currentWidth) ||
+			!(height >= minHeight) ||
+			!(height < currentHeight)
 		) {
-			currentWidth = width
-			currentHeight = height
-			url = photo['url_' + suffix] as string
+			continue
 		}
+
+		currentWidth = width
+		currentHeight = height
+		url = photo['url_' + suffix] as string
 	}
 
 	// Backup if we didn't find anything...
-	if (url === '') {
-		return biggestImageUrl(photo)
-	}
-
-	return url
+	return url === '' ? biggestImageUrl(photo) : url
 }
 
 function biggestImageUrl(photo: Record<string, unknown>): string {
@@ -53,10 +51,12 @@ function biggestImageUrl(photo: Record<string, unknown>): string {
 
 		const area = (photo['width_' + suffix] as number) * (photo['height_' + suffix] as number)
 
-		if (area > maxArea) {
-			maxArea = area
-			url = photo['url_' + suffix] as string
+		if (!(area > maxArea)) {
+			continue
 		}
+
+		maxArea = area
+		url = photo['url_' + suffix] as string
 	}
 
 	return url

@@ -4,9 +4,7 @@
 
 <!-- /title -->
 
-<!-- badges ({
-  npm: [],
-}) -->
+<!-- badges -->
 
 [![License: CC-BY-NC-SA-4.0](https://img.shields.io/badge/License-CC--BY--NC--SA--4.0-yellow.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
 [![CI](https://github.com/kitschpatrol/temporal-collisions/actions/workflows/ci.yml/badge.svg)](https://github.com/kitschpatrol/temporal-collisions/actions/workflows/ci.yml)
@@ -87,6 +85,8 @@ Response:
 ### As a module
 
 _This package is not published to NPM, so module resolution is up to the user._
+
+The function reads a Flickr API key from the `FLICKR_API_KEY` environment variable and throws if it's missing.
 
 ```ts
 import { inspect } from 'node:util'
