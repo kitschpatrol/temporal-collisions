@@ -31,13 +31,12 @@
 	"types": "./dist/index.d.ts",
 	"scripts": {
 		"build": "tsdown --tsconfig tsconfig.build.json --platform neutral --dts",
-		"clean-deep": "shx rm -f pnpm-lock.yaml && git clean -fdX -e !.claude/",
+		"clean-deep": "shx rm -f pnpm-lock.yaml && git clean -fdX",
 		"deploy": "wrangler deploy --secrets-file .env",
 		"dev": "wrangler dev",
 		"fix": "ksc fix",
 		"init": "op inject -i .template.env -o .env",
 		"lint": "ksc lint",
-		"prepare": "skills experimental_sync -y -f",
 		"release": "bumpp --commit 'Release: %s'",
 		"test": "vitest run"
 	},
@@ -46,17 +45,16 @@
 	},
 	"devDependencies": {
 		"@kitschpatrol/dict-en-wiktionary": "^1.6.0",
-		"@kitschpatrol/shared-config": "^8.13.1",
+		"@kitschpatrol/shared-config": "^8.14.0",
 		"@types/node": "~24.13.6",
 		"bumpp": "^12.3.0",
 		"shx": "^0.4.0",
-		"skills": "^1.7.2",
 		"tsdown": "^0.23.1",
 		"typescript": "~6.0.3",
 		"vitest": "^5.0.3",
 		"wrangler": "^4.149.0"
 	},
-	"packageManager": "pnpm@12.11.2",
+	"packageManager": "pnpm@12.15.0",
 	"engines": {
 		"node": "^24.16.0 || >=26.3.0"
 	}

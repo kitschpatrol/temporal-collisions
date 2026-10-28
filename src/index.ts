@@ -83,23 +83,6 @@ function ownerIsUnique(owner: string, photos: Array<Record<string, unknown>>): b
 	return photos.every((photo) => photo.owner !== owner)
 }
 
-type Photo = {
-	datetaken: string
-	datetakengranularity: number
-	datetakenunknown: string
-	id: string
-	owner: string
-	tags: string
-	title: string
-}
-
-type PhotoResult = {
-	id: string
-	imgUrl: string
-	pageUrl: string
-	title: string
-}
-
 /**
  * Rounds a timestamp to the nearest interval based on maxDistanceSeconds
  *
@@ -138,6 +121,15 @@ export async function getTemporalCollisions({
 	minImageWidth?: number | undefined
 	targetTime?: Date | undefined
 } = {}): Promise<Record<string, unknown>> {
+	type Photo = {
+		datetaken: string
+		datetakengranularity: number
+		datetakenunknown: string
+		id: string
+		owner: string
+		tags: string
+		title: string
+	}
 	const flickrApiKey = process.env.FLICKR_API_KEY
 	if (flickrApiKey === undefined) {
 		throw new Error('Missing FLICKR_API_KEY')
@@ -224,6 +216,13 @@ export async function getTemporalCollisions({
 	)
 
 	if (sortedCollisionImages.size > 0) {
+		type PhotoResult = {
+			id: string
+			imgUrl: string
+			pageUrl: string
+			title: string
+		}
+
 		const result: {
 			collisions: Array<{
 				photos: PhotoResult[]
