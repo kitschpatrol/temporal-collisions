@@ -32,6 +32,8 @@ jobs:
 
       - name: Run ksc-update
         uses: kitschpatrol/github-action-skill-to-pr@c055b813acd0ea6a5acb25c976e9ae518dcd50e2 # v1.2.0
+        env:
+          FLICKR_API_KEY: ${{ secrets.FLICKR_API_KEY }}
         with:
           skill: ksc-update
           title: Update dependencies.
